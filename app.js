@@ -2,7 +2,7 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const KEY='nuvora-state-v1';
 const defaultState={mode:'basic',theme:'midnight',angle:'DEG',memory:0,expression:'',result:'0',history:[],favorites:[],customThemes:[],settings:{format:'international',fullscreen:false}};
 let state=load();
-function load(){try{return {...defaultState,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return {...defaultState}}}
+function load(){try{const saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};return {...defaultState,...saved,settings:{...defaultState.settings,...(saved.settings||{})},history:Array.isArray(saved.history)?saved.history:[],favorites:Array.isArray(saved.favorites)?saved.favorites:[],customThemes:Array.isArray(saved.customThemes)?saved.customThemes:[]}}catch{return {...defaultState,settings:{...defaultState.settings},history:[],favorites:[],customThemes:[]}}}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
 function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),1800)}
 function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;')}
@@ -27,7 +27,7 @@ function keyButton(v,label=v,cl=''){return `<button class="key ${cl}" data-key="
 function render(){
  document.querySelector('.app-shell').className=`app-shell ${state.theme==='light'?'light':state.theme==='ocean'?'ocean':state.theme==='sunset'?'sunset':''}`;
  $$('.mode-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.mode));
- if(state.mode==='tools')renderTools();else renderCalc();
+ try{if(state.mode==='tools')renderTools();else renderCalc()}catch(err){console.error('Nuvora render error',err);$('#main').innerHTML=`<section class="tool-card"><h2>Calculator failed to load</h2><p class="sub">${esc(err?.message||String(err))}</p><button class="small-btn primary" onclick="localStorage.removeItem('${KEY}');location.reload()">Reset calculator</button></section>`}
 }
 function renderCalc(){
  const sci=state.mode==='scientific';
