@@ -5,6 +5,7 @@ let state=load();
 function load(){try{return {...defaultState,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return {...defaultState}}}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
 function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),1800)}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;')}
 function fmt(n){if(!Number.isFinite(n))return 'Error'; if(Math.abs(n)<1e-12)n=0; const s=String(Number(n.toPrecision(12))); if(state.settings.format==='indian'){const [a,b]=s.split('.'); if(a.length>3){const sign=a.startsWith('-')?'-':'';const x=sign?a.slice(1):a; const last=x.slice(-3),rest=x.slice(0,-3).replace(/\B(?=(\d{2})+(?!\d))/g,',');return sign+(rest?rest+',':'')+last+(b?'.'+b:'')}} return s}
 function calc(expr){
  let x=expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/π/g,'Math.PI').replace(/\be\b/g,'Math.E').replace(/(\d+(?:\.\d+)?)%/g,'($1/100)');
