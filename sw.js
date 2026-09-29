@@ -1,4 +1,4 @@
-const CACHE_NAME = 'auracalc-v1';
+const CACHE_NAME = 'auracalc-v2';
 const APP_SHELL = [
   './',
   './index.html',
