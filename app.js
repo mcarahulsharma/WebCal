@@ -115,5 +115,5 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-action]');
 $$('.mode-tab').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;save();render()});
 document.addEventListener('keydown',e=>{if(state.mode==='tools')return;let k=e.key;if(k==='Enter')k='=';if(k==='Backspace')k='⌫';if('0123456789.+-*/()%'.includes(k)){k=k==='*'?'×':k==='/'?'÷':k;press(k)}else if(k==='='||k==='⌫')press(k)});
 window.addEventListener('resize',()=>document.body.classList.toggle('landscape',innerWidth>innerHeight));
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.warn));
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(console.warn));
 render();applyCustom();document.body.classList.toggle('landscape',innerWidth>innerHeight);
