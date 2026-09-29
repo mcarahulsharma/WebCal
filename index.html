@@ -53,6 +53,12 @@
             border-radius: 9999px;
         }
     </style>
+
+    <!-- Progressive Web App metadata -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="AuraCalc Pro - Precision scientific calculator with unit conversion, EMI, age, tip, memory and history tools.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 <body class="min-h-screen flex items-center justify-center p-2 sm:p-4 transition-colors duration-300">
 
@@ -526,3 +532,13 @@
     </script>
 </body>
 </html>
+<script>
+    // Register the service worker so WebCal can be installed and work offline.
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(err => {
+                console.warn('Service worker registration failed:', err);
+            });
+        });
+    }
+</script>
